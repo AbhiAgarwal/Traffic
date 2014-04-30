@@ -97,7 +97,6 @@ for clock = 1:clockmax
         end
     end
     % motion and exit of cars
-    exited = zeros(1, 1000);
     for b = 1:nblocks 
         bnext = b + 1 - nblocks * (b == nblocks); % circular blocks
         if firstcar(b) ~= 0  % if block is not empty
@@ -118,7 +117,7 @@ for clock = 1:clockmax
                 nextcar(c) = 0;
                 if rand < p % did the car exit?
                     texit(c) = t;
-                    exited(c) = c;
+                    x(c) = -1;
                 else
                     if lastcar(bnext) == 0
                         firstcar(bnext) = c;
@@ -133,11 +132,7 @@ for clock = 1:clockmax
             cp = c; % trailing pointer
             c = nextcar(c);
             while c ~= 0
-                if exited(c) ~= 0 && texit(c) ~= 0
-                    x(c) = 0;
-                else
-                    x(c) = x(c) + dt * vcar(x(cp) - x(c));
-                end
+                x(c) = x(c) + dt * vcar(x(cp) - x(c));
                 cp = c;
                 c = nextcar(c);
             end
@@ -152,8 +147,8 @@ for clock = 1:clockmax
         d_average(clock) = mean(d);
         v_average(clock) = mean(vcar(d));
     end
-
-    theta = (x / radius);
+    
+    theta = (x(x>0) / radius);
 
     set(h1, 'xdata', radius * cos(theta), 'ydata', radius * sin(theta), 'sizedata', 50 * ones(size(theta)))
     set(h2,'string', sprintf('time=%0.2f min, total # of cars=%d', t, Nsave(clock)))
