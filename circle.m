@@ -22,7 +22,9 @@ dmax = 0.5;   % mile  % dmax<L
 %vmax = (R/p) * dmin * log(dmax/dmin) * 2.73;
 vmax = 20/60;
 
-R = 1.06468; % prob/minuet of entry 
+% 1.06468;
+
+R = 0.44; % prob/minuet of entry 
 p = 0.34; % probability of exit when passing each exit
 
 % Mean dist = total length / number of cars
@@ -30,7 +32,7 @@ p = 0.34; % probability of exit when passing each exit
 % on the curve? good predictor?
 
 dt = dmin / vmax * 0.5;
-tmax = 20;
+tmax = 100;
 clockmax = ceil(tmax / dt);
 tsave = zeros(1, clockmax);
 Nsave = zeros(1, clockmax);  % # of cars on road
@@ -46,9 +48,17 @@ lastcar = zeros(1, nblocks);
 tenter = [];
 texit = [];
 
+% x_plot = linspace(0, dmax * 1.5, 101);
+% [m, q] = intersections(x_plot, vcar(x_plot), x_plot, R / p * x_plot, 0);
+% 
 % % % N uniform distributed cars at beginning
-% N = 30; count = N;
-% x = rand(1, N) * nblocks * L;
+% N = floor((nblocks*L)/(3*m(1))); 
+% count = N;
+% x = zeros(1, N) * nblocks * L;
+% for i = 2:N
+%    x(i) = x(i - 1) + 3 * m(1); 
+% end
+% 
 % x = sort(x);
 % for b = 1:nblocks
 %     ind = find(x < b * L&x >= (b-1) * L);
@@ -164,6 +174,9 @@ end
 
 figure(2)
 plot(tsave, Nsave)
-
+       
 figure(3)
 plot(tsave, d_average, tsave, v_average)
+
+% percentage error
+100 * (abs(v_average(clockmax) - vcar(d_average(clockmax)))/(v_average(clockmax)))
