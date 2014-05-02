@@ -23,8 +23,9 @@ dmax = 0.5;   % mile  % dmax<L
 vmax = 20/60;
 
 % 1.06468;
+% 0.5
 
-R = 1.06468; % prob/minuet of entry 
+R = 0.5; % prob/minuet of entry 
 p = 0.34; % probability of exit when passing each exit
 
 % Mean dist = total length / number of cars
@@ -32,7 +33,7 @@ p = 0.34; % probability of exit when passing each exit
 % on the curve? good predictor?
 
 dt = dmin / vmax * 0.5;
-tmax = 100;
+tmax = 50;
 clockmax = ceil(tmax / dt);
 tsave = zeros(1, clockmax);
 Nsave = zeros(1, clockmax);  % # of cars on road
@@ -48,28 +49,27 @@ lastcar = zeros(1, nblocks);
 tenter = [];
 texit = [];
 
-% x_plot = linspace(0, dmax * 1.5, 101);
-% [m, q] = intersections(x_plot, vcar(x_plot), x_plot, R / p * x_plot, 0);
+x_plot = linspace(0, dmax * 1.5, 101);
+[m, q] = intersections(x_plot, vcar(x_plot), x_plot, R / p * x_plot, 0);
 % 
 % % % N uniform distributed cars at beginning
-% N = floor((nblocks*L)/(3*m(1))); 
-% count = N;
-% x = zeros(1, N) * nblocks * L;
-% for i = 2:N
-%    x(i) = x(i - 1) + 3 * m(1); 
-% end
-% 
-% x = sort(x);
-% for b = 1:nblocks
-%     ind = find(x < b * L&x >= (b-1) * L);
-%     if isempty(ind)
-%         firstcar(b) = 0; lastcar(b) = 0;
-%     else
-%         firstcar(b) = ind(1); lastcar(b) = ind(end);
-%     end
-% end
-% nextcar = 2:N; nextcar(lastcar) = 0;
-% tenter = zeros(1,N); texit = [];
+N = floor((nblocks*L)/(m(2))); 
+count = N;
+x = zeros(1, N) * nblocks * L;
+
+x = linspace(0, nblocks * L-m(2), N); 
+
+x = sort(x,'descend');
+for b = 1:nblocks
+    ind = find(x < b * L&x >= (b-1) * L);
+    if isempty(ind)
+        firstcar(b) = 0; lastcar(b) = 0;
+    else
+        firstcar(b) = ind(1); lastcar(b) = ind(end);
+    end
+end
+nextcar = 2:N; nextcar(lastcar) = 0;
+tenter = zeros(1,N); texit = [];
 
 figure(1);
 set(gcf, 'double', 'on')
