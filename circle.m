@@ -24,7 +24,7 @@ vmax = 20/60;
 
 % 1.06468;
 
-R = 0.44; % prob/minuet of entry 
+R = 1.06468; % prob/minuet of entry 
 p = 0.34; % probability of exit when passing each exit
 
 % Mean dist = total length / number of cars
@@ -167,7 +167,7 @@ for clock = 1:clockmax
     figure(4)
     d_plot = linspace(0, dmax * 1.5, 101);
     plot(d_plot, vcar(d_plot), d_plot, R / p * d_plot)
-    text(d_average(clock), v_average(clock), 'here')
+    text(d_average(clock), v_average(clock), strcat('\diamondsuit ', '  (',num2str(d_average(clock)),', ', num2str(v_average(clock)), ')'))
     axis([0 dmax * 1.5 0 vmax * 1.5])
     
 end
