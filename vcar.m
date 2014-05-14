@@ -1,8 +1,11 @@
 function v = vcar(d)
     global dmin dmax vmax;
-    if (d <= dmin)
-        v = 0;
-    else
-        v = vmax * log(d ./ dmin) / log(dmax / dmin) .* (d > dmin) .* (d < dmax) + vmax * (d >= dmax);
+    v = zeros(size(d));
+    for k = 1:length(d)
+        if (d(k) <= dmin)
+            v(k) = 0;
+        else
+            v(k) = vmax * log(d(k) ./ dmin) / log(dmax / dmin) .* (d(k) > dmin) .* (d(k) < dmax) + vmax * (d(k) >= dmax);
+        end
     end
 end
