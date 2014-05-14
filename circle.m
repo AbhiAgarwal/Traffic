@@ -9,23 +9,35 @@ global dmin dmax vmax;
 nblocks = 10; 
 L = 1; % mile  % L>dmax
 
+% R = 0.5, p = 0.5 --> 2 SS
+% R = 0.56, p = 0.5 --> 2 SS
+% R = 1.3, p = 0.5 --> 2 very close SS
+% R = 1.25 (x = 0.015, y = 0.0375), 1 (x=0.06, y=0.15)
+% R = 1.2, p = 0.5 --> 2 maybe close (x=0.0225, y=0.054) 1 (x=0.0675, y =0.162) 2
+% R = 0.925, p = 0.35 (x = 0.0225, y = 0.05946) 1, (x = 0.0525, y = 0.1388) 2
+ 
 % mile/min
 dmin = 0.01; % mile 
 dmax = 0.5;   % mile  % dmax<L
+%vmax = (R/p) * dmin * log(dmax/dmin) * 2.73;
 vmax = 20/60;
 
-% 1.06468;
+% 1.06468; and 0.34
 % 0.5
+% 5.0
 
-R = 0.5; % prob/minuet of entry 
-p = 0.34; % probability of exit when passing each exit
+%R = 0.78234; % prob/minuet of entry 
+%p = 0.34; % probability of exit when passing each exit
+
+R = 5.0;
+p = 0.34;
 
 % Mean dist = total length / number of cars
 % plot point (mean_dist, v(mean_dist))
 % on the curve? good predictor?
 
 dt = dmin / vmax * 0.5;
-tmax = 50;
+tmax = 150;
 clockmax = ceil(tmax / dt);
 tsave = zeros(1, clockmax);
 Nsave = zeros(1, clockmax);  % # of cars on road
@@ -43,25 +55,43 @@ texit = [];
 
 x_plot = linspace(0, dmax * 1.5, 101);
 [m, q] = intersections(x_plot, vcar(x_plot), x_plot, R / p * x_plot, 0);
+
+% We use the
+% floor function on the total length of the roundabout divided by m, which
+% is Number of blocks * L /x of intersection One. 
+% The explaination of this is we can say m is the unstable point, and
+% length of roundable
+% m would give us a value for the equadistant length between each
+% car.
+
+
+% 2.800 <-> 2.825
+% 2.8125 went up
+% 2.815 went down
+
+% narrow it further up
+% increase it little more up
+
+% g = ((m(3) - 2.81375*m(2)) / 2);
 % 
 % % % N uniform distributed cars at beginning
-N = floor((nblocks*L)/(m(2))); 
-count = N;
-x = zeros(1, N) * nblocks * L;
-
-x = linspace(0, nblocks * L-m(2), N); 
-
-x = sort(x,'descend');
-for b = 1:nblocks
-    ind = find(x < b * L&x >= (b-1) * L);
-    if isempty(ind)
-        firstcar(b) = 0; lastcar(b) = 0;
-    else
-        firstcar(b) = ind(1); lastcar(b) = ind(end);
-    end
-end
-nextcar = 2:N; nextcar(lastcar) = 0;
-tenter = zeros(1,N); texit = [];
+% N = floor((nblocks*L)/(g)); 
+% count = N;
+% x = zeros(1, N) * nblocks * L;
+% 
+% x = linspace(0, nblocks * L-m(2), N); 
+% 
+% x = sort(x,'descend');
+% for b = 1:nblocks
+%     ind = find(x < b * L&x >= (b-1) * L);
+%     if isempty(ind)
+%         firstcar(b) = 0; lastcar(b) = 0;
+%     else
+%         firstcar(b) = ind(1); lastcar(b) = ind(end);
+%     end
+% end
+% nextcar = 2:N; nextcar(lastcar) = 0;
+% tenter = zeros(1,N); texit = [];
 
 figure(1);
 set(gcf, 'double', 'on')
