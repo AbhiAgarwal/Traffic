@@ -9,17 +9,9 @@ global dmin dmax vmax;
 nblocks = 10; 
 L = 1; % mile  % L>dmax
 
-% R = 0.5, p = 0.5 --> 2 SS
-% R = 0.56, p = 0.5 --> 2 SS
-% R = 1.3, p = 0.5 --> 2 very close SS
-% R = 1.25 (x = 0.015, y = 0.0375), 1 (x=0.06, y=0.15)
-% R = 1.2, p = 0.5 --> 2 maybe close (x=0.0225, y=0.054) 1 (x=0.0675, y =0.162) 2
-% R = 0.925, p = 0.35 (x = 0.0225, y = 0.05946) 1, (x = 0.0525, y = 0.1388) 2
- 
 % mile/min
 dmin = 0.01; % mile 
 dmax = 0.5;   % mile  % dmax<L
-%vmax = (R/p) * dmin * log(dmax/dmin) * 2.73;
 vmax = 20/60;
 
 % 1.06468;
